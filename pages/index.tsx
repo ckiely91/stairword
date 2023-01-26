@@ -7,6 +7,8 @@ import { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft, faPlay } from "@fortawesome/free-solid-svg-icons";
 
+import wordList from "../components/wordlist.json";
+
 interface IHomeProps {
   startWord: string;
   endWord: string;
@@ -56,6 +58,13 @@ const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
       return;
     }
 
+    // Check if this is in the dictionary
+    const wordLower = inputVal.toLowerCase();
+    if (!wordList.includes(wordLower)) {
+      alert("Word not in dictionary.");
+      return;
+    }
+
     const newWords = [...words];
     newWords[currentWordIndex] = inputVal;
     setWords(newWords);
@@ -65,7 +74,7 @@ const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
     if (isLastWord) {
       setIsEditing(false);
     }
-  }, [words, currentWordIndex, inputVal]);
+  }, [words, currentWordIndex, inputVal, totalWords]);
 
   const undo = useCallback(() => {
     if (currentWordIndex < 2) {
@@ -127,8 +136,8 @@ const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
 export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
   return {
     props: {
-      startWord: "ACCESS",
-      endWord: "FACTOR",
+      startWord: "ABANDON",
+      endWord: "LOGICAL",
       totalWords: 5,
     },
     revalidate: 3600, // Regenerate site every hour
