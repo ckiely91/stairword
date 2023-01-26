@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div
-        className={`${openSans.variable} ${cutiveMono.variable} font-sans flex justify-center flex-auto dark:bg-slate-900 dark:text-slate-50`}
+        className={`${openSans.variable} ${cutiveMono.variable} font-sans flex justify-center flex-auto bg-slate-900 text-slate-50`}
       >
         <div className="w-full max-w-lg flex flex-col">
           <header className="flex justify-between items-center px-3 border-b-2 border-gray-200">
