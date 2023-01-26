@@ -127,8 +127,8 @@ const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
 export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
   return {
     props: {
-      startWord: "MASKING",
-      endWord: "PLANK",
+      startWord: "ACCESS",
+      endWord: "FACTOR",
       totalWords: 5,
     },
     revalidate: 3600, // Regenerate site every hour
