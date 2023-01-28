@@ -32,12 +32,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fortawesome/free-solid-svg-icons", "npm:6.2.1"],\
             ["@fortawesome/react-fontawesome", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:0.2.0"],\
             ["@next/font", "npm:13.1.5"],\
+            ["@types/luxon", "npm:3.2.0"],\
             ["@types/node", "npm:18.11.18"],\
             ["@types/react", "npm:18.0.27"],\
             ["@types/react-dom", "npm:18.0.10"],\
             ["autoprefixer", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:10.4.13"],\
             ["eslint", "npm:8.32.0"],\
             ["eslint-config-next", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:13.1.5"],\
+            ["luxon", "npm:3.2.1"],\
             ["next", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:13.1.5"],\
             ["postcss", "npm:8.4.21"],\
             ["react", "npm:18.2.0"],\
@@ -417,6 +419,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-json5-npm-0.0.29-f63a7916bd-e60b153664.zip/node_modules/@types/json5/",\
           "packageDependencies": [\
             ["@types/json5", "npm:0.0.29"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/luxon", [\
+        ["npm:3.2.0", {\
+          "packageLocation": "./.yarn/cache/@types-luxon-npm-3.2.0-932ebc98c4-051bfbf841.zip/node_modules/@types/luxon/",\
+          "packageDependencies": [\
+            ["@types/luxon", "npm:3.2.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2955,6 +2966,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["luxon", [\
+        ["npm:3.2.1", {\
+          "packageLocation": "./.yarn/cache/luxon-npm-3.2.1-56f8d97395-3fa3def2c5.zip/node_modules/luxon/",\
+          "packageDependencies": [\
+            ["luxon", "npm:3.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["make-fetch-happen", [\
         ["npm:10.2.1", {\
           "packageLocation": "./.yarn/cache/make-fetch-happen-npm-10.2.1-f1cc7cd2df-2332eb9a8e.zip/node_modules/make-fetch-happen/",\
@@ -4120,12 +4140,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fortawesome/free-solid-svg-icons", "npm:6.2.1"],\
             ["@fortawesome/react-fontawesome", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:0.2.0"],\
             ["@next/font", "npm:13.1.5"],\
+            ["@types/luxon", "npm:3.2.0"],\
             ["@types/node", "npm:18.11.18"],\
             ["@types/react", "npm:18.0.27"],\
             ["@types/react-dom", "npm:18.0.10"],\
             ["autoprefixer", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:10.4.13"],\
             ["eslint", "npm:8.32.0"],\
             ["eslint-config-next", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:13.1.5"],\
+            ["luxon", "npm:3.2.1"],\
             ["next", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:13.1.5"],\
             ["postcss", "npm:8.4.21"],\
             ["react", "npm:18.2.0"],\

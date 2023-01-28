@@ -7,15 +7,22 @@ import { useCallback, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft, faPlay } from "@fortawesome/free-solid-svg-icons";
 
-import wordList from "../components/wordlist.json";
+import wordList from "../wordlists/allWords.json";
+import { getTodaysWords } from "@/funcs/words";
 
 interface IHomeProps {
   startWord: string;
   endWord: string;
   totalWords: number;
+  puzzleNumber: number;
 }
 
-const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
+const Home: NextPage<IHomeProps> = ({
+  startWord,
+  endWord,
+  totalWords,
+  puzzleNumber,
+}) => {
   const [words, setWords] = useState(() => {
     const words: string[] = [startWord];
     for (let i = 0; i < totalWords - 2; i++) {
@@ -92,6 +99,24 @@ const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
     setInputVal("");
   }, [words, currentWordIndex]);
 
+  const share = useCallback(() => {
+    const shareText = `Stairword #${puzzleNumber}
+
+${startWord} ➡️ ${endWord}
+Score: ${getOverlapScore(words)}
+
+https://stairword.vercel.app`;
+
+    if (typeof navigator.share === "function") {
+      navigator.share({
+        text: shareText,
+      });
+    } else if (typeof navigator.clipboard === "object") {
+      navigator.clipboard.writeText(shareText);
+      alert("Copied to clipboard.");
+    }
+  }, [puzzleNumber, startWord, endWord, words]);
+
   return (
     <>
       <StairWordDisplay
@@ -126,7 +151,9 @@ const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
           <div className="">
             You did it! Your score: {getOverlapScore(words)}
           </div>
-          {/* <div className="p-2 mt-2 bg-blue-900">Share</div> */}
+          <div className="p-2 mt-2 bg-blue-900 cursor-pointer" onClick={share}>
+            Share
+          </div>
         </div>
       )}
     </>
@@ -134,11 +161,14 @@ const Home: NextPage<IHomeProps> = ({ startWord, endWord, totalWords }) => {
 };
 
 export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
+  const [startWord, endWord, puzzleNumber] = getTodaysWords();
+
   return {
     props: {
-      startWord: "ABANDON",
-      endWord: "LOGICAL",
+      startWord: startWord.toUpperCase(),
+      endWord: endWord.toUpperCase(),
       totalWords: 5,
+      puzzleNumber,
     },
     revalidate: 3600, // Regenerate site every hour
   };
