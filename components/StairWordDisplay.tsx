@@ -1,25 +1,5 @@
+import { getOverlapCountBetweenWords } from "@/lib/words";
 import { FC, useMemo } from "react";
-
-export const getOverlapCountBetweenWords = (wordA: string, wordB: string) => {
-  for (let i = 1; i < wordA.length; i++) {
-    const sliced = wordA.slice(i);
-    if (wordB.startsWith(sliced)) {
-      return sliced.length;
-    }
-  }
-
-  return 0;
-};
-
-export const getOverlapScore = (words: string[]) => {
-  let score = 0;
-
-  for (let i = 1; i < words.length; i++) {
-    score += getOverlapCountBetweenWords(words[i - 1], words[i]);
-  }
-
-  return score;
-};
 
 interface IStairWordDisplayProps {
   words: string[];

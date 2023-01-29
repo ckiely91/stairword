@@ -1,27 +1,35 @@
-import StairWordDisplay, {
-  getOverlapCountBetweenWords,
-  getOverlapScore,
-} from "@/components/StairWordDisplay";
+import StairWordDisplay from "@/components/StairWordDisplay";
 import { NextPage, GetStaticProps } from "next";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft, faPlay } from "@fortawesome/free-solid-svg-icons";
 
 import wordList from "../wordlists/allWords.json";
-import { getTodaysWords } from "@/funcs/words";
+import {
+  getOverlapCountBetweenWords,
+  getOverlapScore,
+  getTodaysWords,
+} from "@/lib/words";
+import { getTodaysData, setTodaysData } from "@/lib/storage";
+import { ResultData } from "./api/result";
+import { getStatsForStairwordNumber } from "@/lib/db";
 
 interface IHomeProps {
   startWord: string;
   endWord: string;
   totalWords: number;
-  puzzleNumber: number;
+  stairwordNumber: number;
+  todaysMaxScore: number;
+  todaysAvgScore: number;
 }
 
 const Home: NextPage<IHomeProps> = ({
   startWord,
   endWord,
   totalWords,
-  puzzleNumber,
+  stairwordNumber,
+  todaysMaxScore,
+  todaysAvgScore,
 }) => {
   const [words, setWords] = useState(() => {
     const words: string[] = [startWord];
@@ -35,6 +43,31 @@ const Home: NextPage<IHomeProps> = ({
   const [currentWordIndex, setCurrentWordIndex] = useState(1);
   const [inputVal, setInputVal] = useState("");
   const [isEditing, setIsEditing] = useState(true);
+  const [uniqueShareID, setUniqueShareID] = useState("");
+  const [todaysStats, setTodaysStats] = useState({
+    todaysMaxScore,
+    todaysAvgScore,
+  });
+
+  useEffect(() => {
+    const storedData = getTodaysData();
+    if (
+      storedData?.stairwordNumber === stairwordNumber &&
+      storedData.words[0] === startWord
+    ) {
+      setWords(storedData.words);
+      const nextBlankIdx = storedData.words.indexOf("");
+      setCurrentWordIndex(nextBlankIdx);
+
+      if (nextBlankIdx === -1) {
+        setIsEditing(false);
+      }
+
+      if (storedData.shareID) {
+        setUniqueShareID(storedData.shareID);
+      }
+    }
+  }, [startWord, stairwordNumber]);
 
   const trySubmitWord = useCallback(() => {
     if (inputVal.length < 3) {
@@ -77,11 +110,41 @@ const Home: NextPage<IHomeProps> = ({
     setWords(newWords);
     setCurrentWordIndex(currentWordIndex + 1);
     setInputVal("");
+    setTodaysData({
+      words: newWords,
+      stairwordNumber,
+    });
 
     if (isLastWord) {
       setIsEditing(false);
+
+      fetch(`/api/result?words=${newWords.join(",")}`, { method: "POST" })
+        .then((res) => res.json())
+        .then((result: ResultData) => {
+          console.log("GOT RESULT", result);
+
+          if (result.uniqueShareID !== undefined) {
+            setUniqueShareID(result.uniqueShareID);
+            setTodaysData({
+              words: newWords,
+              stairwordNumber,
+              shareID: result.uniqueShareID,
+            });
+          }
+
+          if (
+            result.todaysAvgScore !== undefined &&
+            result.todaysMaxScore !== undefined
+          ) {
+            setTodaysStats({
+              todaysAvgScore: result.todaysAvgScore,
+              todaysMaxScore: result.todaysMaxScore,
+            });
+          }
+        })
+        .catch((e) => console.error(e));
     }
-  }, [words, currentWordIndex, inputVal, totalWords]);
+  }, [words, currentWordIndex, inputVal, totalWords, stairwordNumber]);
 
   const undo = useCallback(() => {
     if (currentWordIndex < 2) {
@@ -100,12 +163,14 @@ const Home: NextPage<IHomeProps> = ({
   }, [words, currentWordIndex]);
 
   const share = useCallback(() => {
-    const shareText = `Stairword #${puzzleNumber}
+    const shareText = `Stairword #${stairwordNumber}
 
 ${startWord} ➡️ ${endWord}
 Score: ${getOverlapScore(words)}
 
-https://stairword.vercel.app`;
+See my solution (spoilers!): https://stairword.vercel.app/${uniqueShareID}
+
+Play it yourself: https://stairword.vercel.app`;
 
     if (typeof navigator.share === "function") {
       navigator.share({
@@ -115,7 +180,7 @@ https://stairword.vercel.app`;
       navigator.clipboard.writeText(shareText);
       alert("Copied to clipboard.");
     }
-  }, [puzzleNumber, startWord, endWord, words]);
+  }, [stairwordNumber, startWord, endWord, words, uniqueShareID]);
 
   return (
     <>
@@ -151,6 +216,14 @@ https://stairword.vercel.app`;
           <div className="">
             You did it! Your score: {getOverlapScore(words)}
           </div>
+          {todaysStats.todaysAvgScore > -1 &&
+            todaysStats.todaysMaxScore > -1 && (
+              <div className="mt-2">
+                Today&apos;s max score: {todaysStats.todaysMaxScore}
+                <br />
+                Today&apos;s average score: {todaysStats.todaysAvgScore}
+              </div>
+            )}
           <div className="p-2 mt-2 bg-blue-900 cursor-pointer" onClick={share}>
             Share
           </div>
@@ -161,14 +234,17 @@ https://stairword.vercel.app`;
 };
 
 export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
-  const [startWord, endWord, puzzleNumber] = getTodaysWords();
+  const [startWord, endWord, stairwordNumber] = getTodaysWords();
+  const todaysStats = await getStatsForStairwordNumber(stairwordNumber);
 
   return {
     props: {
       startWord: startWord.toUpperCase(),
       endWord: endWord.toUpperCase(),
       totalWords: 5,
-      puzzleNumber,
+      stairwordNumber,
+      todaysAvgScore: todaysStats.avgScore,
+      todaysMaxScore: todaysStats.maxScore,
     },
     revalidate: 3600, // Regenerate site every hour
   };
