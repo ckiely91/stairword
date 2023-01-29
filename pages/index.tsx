@@ -170,9 +170,9 @@ const Home: NextPage<IHomeProps> = ({
 ${startWord} ➡️ ${endWord}
 Score: ${getOverlapScore(words)}
 
-See my solution (spoilers!): ${siteURL}/${uniqueShareID}
+Play it yourself: ${siteURL}
 
-Play it yourself: ${siteURL}`;
+See my solution (spoilers!): ${siteURL}/${uniqueShareID}`;
 
     if (typeof navigator.share === "function") {
       navigator.share({
@@ -226,9 +226,14 @@ Play it yourself: ${siteURL}`;
                 Today&apos;s average score: {todaysStats.todaysAvgScore}
               </div>
             )}
-          <div className="p-2 mt-2 bg-blue-900 cursor-pointer" onClick={share}>
-            Share
-          </div>
+          {uniqueShareID && (
+            <div
+              className="p-2 mt-2 bg-blue-900 cursor-pointer"
+              onClick={share}
+            >
+              Share
+            </div>
+          )}
         </div>
       )}
     </>
