@@ -14,6 +14,8 @@ import { getTodaysData, setTodaysData } from "@/lib/storage";
 import { ResultData } from "./api/result";
 import { getStatsForStairwordNumber } from "@/lib/db";
 
+const siteURL = "https://stairword.acrofever.com";
+
 interface IHomeProps {
   startWord: string;
   endWord: string;
@@ -168,9 +170,9 @@ const Home: NextPage<IHomeProps> = ({
 ${startWord} ➡️ ${endWord}
 Score: ${getOverlapScore(words)}
 
-See my solution (spoilers!): https://stairword.vercel.app/${uniqueShareID}
+See my solution (spoilers!): ${siteURL}/${uniqueShareID}
 
-Play it yourself: https://stairword.vercel.app`;
+Play it yourself: ${siteURL}`;
 
     if (typeof navigator.share === "function") {
       navigator.share({
