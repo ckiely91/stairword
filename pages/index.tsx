@@ -202,8 +202,10 @@ See my solution (spoilers!): ${siteURL}/${uniqueShareID}`;
         text: shareText,
       });
     } else if (typeof navigator.clipboard === "object") {
-      navigator.clipboard.writeText(shareText);
-      alert("Copied to clipboard.");
+      navigator.clipboard
+        .writeText(shareText)
+        .then(() => alert("Copied to clipboard."))
+        .catch((e) => console.error(e));
     }
   }, [stairwordNumber, startWord, endWord, words, uniqueShareID]);
 
