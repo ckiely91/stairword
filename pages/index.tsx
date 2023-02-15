@@ -221,6 +221,7 @@ See my solution (spoilers!): ${siteURL}/${uniqueShareID}`;
             type="text"
             className="grow bg-slate-800 rounded-tl-lg rounded-bl-lg p-2 font-mono"
             placeholder="Type word here"
+            autoComplete="off"
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value.trim().toLowerCase())}
             onKeyDown={(e) => e.key === "Enter" && trySubmitWord()}
