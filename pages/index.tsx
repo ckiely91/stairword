@@ -216,7 +216,7 @@ See my solution (spoilers!): ${siteURL}/${uniqueShareID}`;
         highlightRow={isEditing ? currentWordIndex : -1}
       />
       {isEditing ? (
-        <div className="flex flex-row items-stretch justify-stretch mt-3 px-1">
+        <div className="flex flex-row items-stretch justify-stretch mt-3 px-2">
           <input
             type="text"
             className="grow bg-slate-800 rounded-tl-lg rounded-bl-lg p-2 font-mono"

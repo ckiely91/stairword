@@ -3,7 +3,7 @@ import { NextPage } from "next";
 
 const HowToPlay: NextPage = () => {
   return (
-    <>
+    <div className="px-2">
       <h1 className="text-2xl font-semibold mt-4 mb-1">How to Play</h1>
       <p className="my-1">
         Each day, you&apos;ll be given a <strong>start</strong> and an{" "}
@@ -34,7 +34,7 @@ const HowToPlay: NextPage = () => {
       <p className="my-1">
         The above example would score <strong>15 points</strong>.
       </p>
-    </>
+    </div>
   );
 };
 
