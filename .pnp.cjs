@@ -29,6 +29,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["@fortawesome/fontawesome-svg-core", "npm:6.2.1"],\
+            ["@fortawesome/free-regular-svg-icons", "npm:6.3.0"],\
             ["@fortawesome/free-solid-svg-icons", "npm:6.2.1"],\
             ["@fortawesome/react-fontawesome", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:0.2.0"],\
             ["@next/font", "npm:13.1.5"],\
@@ -1030,6 +1031,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@fortawesome/fontawesome-common-types", "npm:6.2.1"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:6.3.0", {\
+          "packageLocation": "./.yarn/unplugged/@fortawesome-fontawesome-common-types-npm-6.3.0-eacaac4a37/node_modules/@fortawesome/fontawesome-common-types/",\
+          "packageDependencies": [\
+            ["@fortawesome/fontawesome-common-types", "npm:6.3.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["@fortawesome/fontawesome-svg-core", [\
@@ -1038,6 +1046,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@fortawesome/fontawesome-svg-core", "npm:6.2.1"],\
             ["@fortawesome/fontawesome-common-types", "npm:6.2.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@fortawesome/free-regular-svg-icons", [\
+        ["npm:6.3.0", {\
+          "packageLocation": "./.yarn/unplugged/@fortawesome-free-regular-svg-icons-npm-6.3.0-956db3696f/node_modules/@fortawesome/free-regular-svg-icons/",\
+          "packageDependencies": [\
+            ["@fortawesome/free-regular-svg-icons", "npm:6.3.0"],\
+            ["@fortawesome/fontawesome-common-types", "npm:6.3.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5214,6 +5232,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["stairword", "workspace:."],\
             ["@fortawesome/fontawesome-svg-core", "npm:6.2.1"],\
+            ["@fortawesome/free-regular-svg-icons", "npm:6.3.0"],\
             ["@fortawesome/free-solid-svg-icons", "npm:6.2.1"],\
             ["@fortawesome/react-fontawesome", "virtual:c76740518763c07380285a5b24915c31b23a5cf4a9056bc75a8a33a2bebcf2a670ae2db3671c47167f14b064bb3d8007a13cf04bc3b54e82f7e5e7c039d27344#npm:0.2.0"],\
             ["@next/font", "npm:13.1.5"],\

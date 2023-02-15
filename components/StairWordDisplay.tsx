@@ -62,7 +62,7 @@ const StairWordDisplay: FC<IStairWordDisplayProps> = ({
   }, [words]);
 
   return (
-    <div className="font-mono text-2xl overflow-x-auto ">
+    <div className="font-mono text-3xl tracking-wide overflow-x-auto ">
       <div className="py-2 min-w-full inline-flex flex-col divide-y divide-dotted divide-slate-700">
         {renderItems.map((item, i) => (
           <div
@@ -74,10 +74,22 @@ const StairWordDisplay: FC<IStairWordDisplayProps> = ({
             {!item.rightAlign && (
               <span className="whitespace-pre">{" ".repeat(item.indent)}</span>
             )}
-            <span className="text-orange-400 whitespace-pre">
+            <span
+              className={`${
+                i === 1 || i === renderItems.length - 1
+                  ? "text-lime-400"
+                  : "text-orange-400"
+              } whitespace-pre`}
+            >
               {item.prevOverlap}
             </span>
-            <span className="text-orange-400 whitespace-pre">
+            <span
+              className={`${
+                i === 1 || i === renderItems.length - 1
+                  ? "text-lime-400"
+                  : "text-orange-400"
+              } whitespace-pre`}
+            >
               {item.bothOverlap}
             </span>
             <span className="whitespace-pre">{item.nonOverlap}</span>

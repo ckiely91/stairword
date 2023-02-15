@@ -62,7 +62,7 @@ export const getStaticProps: GetStaticProps<ISharedResultProps> = async (
   }
 
   for (let i = 0; i < gameResults.words.length; i++) {
-    gameResults.words[i] = gameResults.words[i].toUpperCase();
+    gameResults.words[i] = gameResults.words[i].toLowerCase();
   }
 
   return {

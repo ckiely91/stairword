@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotateLeft, faPlay } from "@fortawesome/free-solid-svg-icons";
 
-import wordList from "../wordlists/allWords.json";
 import {
+  checkWordValid,
   getOverlapCountBetweenWords,
   getOverlapScore,
   getTodaysWords,
@@ -50,6 +50,7 @@ const Home: NextPage<IHomeProps> = ({
     todaysMaxScore,
     todaysAvgScore,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const storedData = getTodaysData();
@@ -71,7 +72,7 @@ const Home: NextPage<IHomeProps> = ({
     }
   }, [startWord, stairwordNumber]);
 
-  const trySubmitWord = useCallback(() => {
+  const trySubmitWord = useCallback(async () => {
     if (inputVal.length < 3) {
       alert("Words must be at least 3 letters long.");
       return;
@@ -85,12 +86,22 @@ const Home: NextPage<IHomeProps> = ({
       return;
     }
 
+    if (overlap === inputVal.length) {
+      alert(`Your new word must extend past the previous word.`);
+      return;
+    }
+
     const isLastWord = currentWordIndex === totalWords - 2;
     if (isLastWord) {
       const nextWord = words[currentWordIndex + 1];
       const overlap = getOverlapCountBetweenWords(inputVal, nextWord);
       if (overlap === 0) {
         alert(`Your new word must overlap with the start of "${nextWord}".`);
+        return;
+      }
+
+      if (overlap === nextWord.length) {
+        alert("The final word must extend past the previous word.");
         return;
       }
     }
@@ -100,52 +111,64 @@ const Home: NextPage<IHomeProps> = ({
       return;
     }
 
+    setIsSubmitting(true);
+
     // Check if this is in the dictionary
     const wordLower = inputVal.toLowerCase();
-    if (!wordList.includes(wordLower)) {
+    const isWord = await checkWordValid(wordLower);
+    if (!isWord) {
       alert("Word not in dictionary.");
+      setIsSubmitting(false);
       return;
     }
 
     const newWords = [...words];
     newWords[currentWordIndex] = inputVal;
+
+    if (isLastWord) {
+      try {
+        const resp = await fetch(`/api/result?words=${newWords.join(",")}`, {
+          method: "POST",
+        });
+        const result: ResultData = await resp.json();
+
+        setIsEditing(false);
+
+        if (result.uniqueShareID !== undefined) {
+          setUniqueShareID(result.uniqueShareID);
+          setTodaysData({
+            words: newWords,
+            stairwordNumber,
+            shareID: result.uniqueShareID,
+          });
+        }
+
+        if (
+          result.todaysAvgScore !== undefined &&
+          result.todaysMaxScore !== undefined
+        ) {
+          setTodaysStats({
+            todaysAvgScore: result.todaysAvgScore,
+            todaysMaxScore: result.todaysMaxScore,
+          });
+        }
+      } catch (e) {
+        console.error("error submitting", e);
+        alert("Sorry, something went wrong submitting your answer.");
+        setIsSubmitting(false);
+        return;
+      }
+    } else {
+      setTodaysData({
+        words: newWords,
+        stairwordNumber,
+      });
+    }
+
     setWords(newWords);
     setCurrentWordIndex(currentWordIndex + 1);
     setInputVal("");
-    setTodaysData({
-      words: newWords,
-      stairwordNumber,
-    });
-
-    if (isLastWord) {
-      setIsEditing(false);
-
-      fetch(`/api/result?words=${newWords.join(",")}`, { method: "POST" })
-        .then((res) => res.json())
-        .then((result: ResultData) => {
-          console.log("GOT RESULT", result);
-
-          if (result.uniqueShareID !== undefined) {
-            setUniqueShareID(result.uniqueShareID);
-            setTodaysData({
-              words: newWords,
-              stairwordNumber,
-              shareID: result.uniqueShareID,
-            });
-          }
-
-          if (
-            result.todaysAvgScore !== undefined &&
-            result.todaysMaxScore !== undefined
-          ) {
-            setTodaysStats({
-              todaysAvgScore: result.todaysAvgScore,
-              todaysMaxScore: result.todaysMaxScore,
-            });
-          }
-        })
-        .catch((e) => console.error(e));
-    }
+    setIsSubmitting(false);
   }, [words, currentWordIndex, inputVal, totalWords, stairwordNumber]);
 
   const undo = useCallback(() => {
@@ -197,18 +220,22 @@ See my solution (spoilers!): ${siteURL}/${uniqueShareID}`;
             className="grow bg-slate-800 rounded-tl-lg rounded-bl-lg p-2 font-mono"
             placeholder="Type word here"
             value={inputVal}
-            onChange={(e) => setInputVal(e.target.value.trim().toUpperCase())}
+            onChange={(e) => setInputVal(e.target.value.trim().toLowerCase())}
             onKeyDown={(e) => e.key === "Enter" && trySubmitWord()}
           />
           <div
-            className="cursor-pointer px-2 bg-red-900 flex items-center"
-            onClick={undo}
+            className={`px-2 bg-red-900 flex items-center ${
+              isSubmitting ? "opacity-25" : "cursor-pointer"
+            }`}
+            onClick={isSubmitting ? undefined : undo}
           >
             <FontAwesomeIcon icon={faRotateLeft} className="h-5" />
           </div>
           <div
-            className="cursor-pointer px-4 bg-blue-900 flex items-center rounded-tr-lg rounded-br-lg"
-            onClick={trySubmitWord}
+            className={`px-4 bg-blue-900 flex items-center rounded-tr-lg rounded-br-lg ${
+              isSubmitting ? "opacity-25" : "cursor-pointer"
+            }`}
+            onClick={isSubmitting ? undefined : trySubmitWord}
           >
             <FontAwesomeIcon icon={faPlay} className="h-5" />
           </div>
@@ -246,8 +273,8 @@ export const getStaticProps: GetStaticProps<IHomeProps> = async (context) => {
 
   return {
     props: {
-      startWord: startWord.toUpperCase(),
-      endWord: endWord.toUpperCase(),
+      startWord: startWord.toLowerCase(),
+      endWord: endWord.toLowerCase(),
       totalWords: 5,
       stairwordNumber,
       todaysAvgScore: todaysStats.avgScore,

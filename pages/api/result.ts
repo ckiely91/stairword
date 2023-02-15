@@ -3,7 +3,11 @@ import {
   randomString,
   saveGameResult,
 } from "@/lib/db";
-import { getOverlapCountBetweenWords, getTodaysWords } from "@/lib/words";
+import {
+  checkWordValid,
+  getOverlapCountBetweenWords,
+  getTodaysWords,
+} from "@/lib/words";
 import type { NextApiRequest, NextApiResponse } from "next";
 import wordList from "../../wordlists/allWords.json";
 
@@ -70,7 +74,9 @@ export default async function handler(
 
   // ensure they are in the dictionary
   for (let i = 0; i < words.length; i++) {
-    if (!wordList.includes(words[i])) {
+    const isWord = await checkWordValid(words[i]);
+
+    if (!isWord) {
       res.status(422).json({
         error: `${words[i]} is not a word`,
       });

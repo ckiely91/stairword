@@ -4,7 +4,10 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleLeft, faChartLine } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleLeft,
+  faCircleQuestion,
+} from "@fortawesome/free-regular-svg-icons";
 import { Open_Sans, Cutive_Mono } from "@next/font/google";
 
 const openSans = Open_Sans({
@@ -41,19 +44,19 @@ function MyApp({ Component, pageProps }: AppProps) {
                 </Link>
               )}
             </div>
-            <h1 className="text-4xl font-bold uppercase tracking-wide text-center my-1 flex-auto">
-              StairWord
+            <h1 className="text-4xl font-mono tracking-wide text-center my-1 flex-auto text-slate-300">
+              stairword
             </h1>
-            {/* <div className="w-5">
-              {router.pathname !== "/stats" && (
-                <Link href="/stats">
+            <div className="w-5">
+              {router.pathname !== "/howtoplay" && (
+                <Link href="/howtoplay">
                   <FontAwesomeIcon
-                    icon={faChartLine}
+                    icon={faCircleQuestion}
                     className="w-5 cursor-pointer"
                   />
                 </Link>
               )}
-            </div> */}
+            </div>
           </header>
           <div className="flex flex-grow flex-col relative">
             <Component {...pageProps} />
