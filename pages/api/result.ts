@@ -9,6 +9,7 @@ import {
   getTodaysWords,
 } from "@/lib/words";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getOverlapScore } from "../../lib/words";
 import wordList from "../../wordlists/allWords.json";
 
 export interface ResultData {
@@ -60,7 +61,6 @@ export default async function handler(
   }
 
   // ensure we have overlaps and calculate the score
-  let score = 0;
   for (let i = 1; i < words.length; i++) {
     const overlapCount = getOverlapCountBetweenWords(words[i - 1], words[i]);
     if (overlapCount === 0) {
@@ -69,8 +69,9 @@ export default async function handler(
       });
       return;
     }
-    score += overlapCount;
   }
+
+  const score = getOverlapScore(words);
 
   // ensure they are in the dictionary
   for (let i = 0; i < words.length; i++) {
